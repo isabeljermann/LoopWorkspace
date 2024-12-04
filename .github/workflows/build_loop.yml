@@ -243,6 +243,13 @@ jobs:
           echo ${{ steps.sync.outputs.has_new_commits }}
           echo "NEW_COMMITS=${{ steps.sync.outputs.has_new_commits }}" >> $GITHUB_OUTPUT
 
+      - name: Apply DanaKit patch
+        run: |
+          echo "Downloading code to support Dana pump"
+          git clone --branch=dev https://github.com/bastiaanv/DanaKit
+          echo "Applying customization to add Dana support to Loop"
+          curl https://github.com/loopandlearn/LoopWorkspace/commit/155d2e4a89ab5e7e6b423c67f8c0ccb132517ca4.patch | git apply
+
       - name: Checkout Repo for building
         uses: actions/checkout@v4
         with:
@@ -293,11 +300,6 @@ jobs:
 
           # the final customization listed above CANNOT have a continuation character
           # more customizations can be pasted after this line
-
-          echo "Downloading code to support Dana pump"
-          git clone --branch=dev https://github.com/bastiaanv/DanaKit
-          echo "Applying customization to add Dana support to Loop"
-          curl https://github.com/loopandlearn/LoopWorkspace/commit/155d2e4a89ab5e7e6b423c67f8c0ccb132517ca4.patch | git apply
           
       # Patch Fastlane Match to not print tables
       - name: Patch Match Tables
